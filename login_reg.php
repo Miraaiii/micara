@@ -16,12 +16,12 @@
             <form action="#" method="post">
                 <h1>LOGIN</h1>
                 <div class="input-box">
-                    <input type="email" name="#" id="#" placeholder="Email" required>
+                    <input type="email" name="#" id="email" placeholder="Email" required>
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
                 <div class="input-box">
-                    <input type="password" name="#" id="#" placeholder="Password" required>
+                    <input type="password" name="#" id="password" placeholder="Password" required>
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
