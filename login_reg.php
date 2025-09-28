@@ -13,15 +13,15 @@
 
         <!-- LOGIN -->
         <div class="form-box login">
-            <form action="#" method="post">
+            <form action="backend/login.php" method="post">
                 <h1>LOGIN</h1>
                 <div class="input-box">
-                    <input type="email" name="#" id="email" placeholder="Email" required>
+                    <input type="email" name="email" id="email" placeholder="Email" required>
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
                 <div class="input-box">
-                    <input type="password" name="#" id="password" placeholder="Password" required>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
@@ -34,17 +34,24 @@
 
         <!-- REGISTER -->
         <div class="form-box register">
-            <form action="#" method="post">
+            <form action="backend/register.php" method="post">
                 <h1>REGISTER</h1>
+
                 <div class="input-box">
-                    <input type="email" name="#" id="#" placeholder="Email" required>
+                    <input type="text" name="fullname" id="fullname" placeholder="Full Name" required>
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="input-box">
+                    <input type="email" name="email" id="email" placeholder="Email" required>
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
                 <div class="input-box">
-                    <input type="password" name="#" id="#" placeholder="Password" required>
-                    <i class="fa-solid fa-envelope"></i>
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <i class="fa-solid fa-lock"></i>
                 </div>
+
                 <button type="submit" class="btn">Register</button>
             </form>
         </div>
