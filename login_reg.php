@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
 <body>
-   <div class="container">
+   <div class="container<?php echo (isset($_GET['registered']) && $_GET['registered'] === 'true') ? ' active' : ''; ?>">
 
         <!-- LOGIN -->
         <div class="form-box login">
@@ -52,7 +52,7 @@
                     <i class="fa-solid fa-lock"></i>
                 </div>
 
-                <button type="submit" class="btn">Register</button>
+                <button type="submit" class="btn reg-submit">Register</button>
             </form>
         </div>
 
@@ -71,4 +71,23 @@
    </div> 
 </body>
 <script src="js/script.js"></script>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(window.location.search);
+        const container = document.querySelector('.container');
+
+        if (params.get('registered') === 'true') {
+            setTimeout(() => {
+                container.classList.remove('active');
+
+
+                const loginForm = document.querySelector('.form-box.login form');
+                if (loginForm) loginForm.prepend(msg);
+
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }, 100);
+        }
+    });
+</script>
 </html>
