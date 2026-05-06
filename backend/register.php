@@ -2,48 +2,57 @@
 session_start();
 include 'connection.php';
 
+header('Content-Type: application/json');
+
+$response = [];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullname = trim($_POST['fullname']);
     $email    = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    // Check empty fields
     if (empty($fullname) || empty($email) || empty($password)) {
-        $_SESSION['error'] = "All fields are required.";
-        header("Location: ../login_reg.php?registered=false");
+        echo json_encode([
+            "status" => "error",
+            "message" => "All fields are required."
+        ]);
         exit();
     }
 
-    // Check if email already exists
+    // Check email
     $stmt = $conn->prepare("SELECT userID FROM users_tbl WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $_SESSION['error'] = "Email already registered.";
-        header("Location: ../login_reg.php?registered=false");
+        echo json_encode([
+            "status" => "error",
+            "message" => "Email already registered."
+        ]);
         exit();
     }
     $stmt->close();
 
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert new user
     $stmt = $conn->prepare("INSERT INTO users_tbl (fullName, email, password) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $fullname, $email, $hashed_password);
 
     if ($stmt->execute()) {
-        $_SESSION['success'] = "Registration successful! You can now log in.";
-        header("Location: ../login_reg.php?registered=true");
-        exit();
+        echo json_encode([
+            "status" => "success",
+            "message" => "Registration successful!"
+        ]);
     } else {
-        $_SESSION['error'] = "Something went wrong. Please try again.";
-        header("Location: ../login_reg.php?registered=false");
-        exit();
+        echo json_encode([
+            "status" => "error",
+            "message" => "Something went wrong."
+        ]);
     }
 
     $stmt->close();
 }
+
 $conn->close();
 ?>

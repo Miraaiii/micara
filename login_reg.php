@@ -7,9 +7,12 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty/lib/noty.css">
 </head>
 <body>
-   <div class="container<?php echo (isset($_GET['registered']) && $_GET['registered'] === 'true') ? ' active' : ''; ?>">
+   <div class="container<?php echo (isset($_GET['registered']) && $_GET['registered'] === 'true') ? ' active' : 
+     ((isset($_GET['registered']) && $_GET['registered'] === 'false') ? ' active' : '');
+    ?>">
 
         <!-- LOGIN -->
         <div class="form-box login">
@@ -34,7 +37,7 @@
 
         <!-- REGISTER -->
         <div class="form-box register">
-            <form action="backend/register.php" method="post">
+            <form id="registerForm" action="backend/register.php" method="post">
                 <h1>REGISTER</h1>
 
                 <div class="input-box">
@@ -43,7 +46,7 @@
                 </div>
 
                 <div class="input-box">
-                    <input type="email" name="email" id="email" placeholder="Email" required>
+                    <input type="email" name="email" id="reg_email" placeholder="Email" required>
                     <i class="fa-solid fa-envelope"></i>
                 </div>
 
@@ -68,9 +71,72 @@
                 <button class="btn login-btn">Login</button>
             </div>
         </div>
-   </div> 
+   </div>
+   <?php if (isset($_SESSION['error'])): ?>
+        <script>
+        new Noty({
+            type: 'error',
+            layout: 'topRight',
+            text: '<?php echo $_SESSION['error']; ?>',
+            timeout: 3000
+        }).show();
+        </script>
+        <?php unset($_SESSION['error']); endif; ?>
+
+        <?php if (isset($_SESSION['success'])): ?>
+        <script>
+        new Noty({
+            type: 'success',
+            layout: 'topRight',
+            text: '<?php echo $_SESSION['success']; ?>',
+            timeout: 3000
+        }).show();
+        </script>
+    <?php unset($_SESSION['success']); endif; ?>
+
+    <script>
+document.getElementById("registerForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const formData = new FormData(form);
+
+    fetch("backend/register.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        new Noty({
+            type: data.status === "success" ? "success" : "error",
+            layout: "topRight",
+            text: data.message,
+            timeout: 3000
+        }).show();
+
+        if (data.status === "success") {
+            form.reset();
+
+            // switch to login form
+            document.querySelector('.container').classList.remove('active');
+        } else {
+            // stay on register form
+            document.querySelector('.container').classList.add('active');
+        }
+    })
+    .catch(err => {
+        new Noty({
+            type: "error",
+            layout: "topRight",
+            text: "Server error. Try again.",
+            timeout: 3000
+        }).show();
+    });
+});
+</script>
 </body>
 <script src="js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/noty/lib/noty.min.js"></script>
 
 <script>
     window.addEventListener('DOMContentLoaded', () => {
@@ -80,11 +146,6 @@
         if (params.get('registered') === 'true') {
             setTimeout(() => {
                 container.classList.remove('active');
-
-
-                const loginForm = document.querySelector('.form-box.login form');
-                if (loginForm) loginForm.prepend(msg);
-
                 window.history.replaceState({}, document.title, window.location.pathname);
             }, 100);
         }
